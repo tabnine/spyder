@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spyder\n"
 "POT-Creation-Date: 2021-07-30 19:05-0500\n"
-"PO-Revision-Date: 2021-09-03 14:53\n"
+"PO-Revision-Date: 2021-09-03 15:02\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -426,7 +426,7 @@ msgstr "LSP 服务器的 Spyder 插件"
 
 #: spyder/dependencies.py:192
 msgid "Parse desktop files on Linux"
-msgstr "解析 Linux 中的 desktop 文件"
+msgstr "在 Linux 上解析 desktop 文件"
 
 #: spyder/dependencies.py:197
 msgid "Client for the language server protocol (LSP)"
@@ -434,7 +434,7 @@ msgstr "语言服务器协议（LSP）客户端"
 
 #: spyder/dependencies.py:201
 msgid "Dark style for the entire interface"
-msgstr "整个界面的黑色样式"
+msgstr "全局暗色样式"
 
 #: spyder/dependencies.py:205
 msgid "Customize Qt stylesheets"
@@ -442,11 +442,11 @@ msgstr "自定义 Qt 样式表"
 
 #: spyder/dependencies.py:209
 msgid "Icon theme based on FontAwesome and Material Design icons"
-msgstr "基于FontAwesome和Material Design的图标主题"
+msgstr "基于 FontAwesome 和 Material Design 的图标主题"
 
 #: spyder/dependencies.py:213
 msgid "Main package for the IPython console"
-msgstr "Ipython控制台的主程序包"
+msgstr "IPython 控制台的主程序包"
 
 #: spyder/dependencies.py:217
 msgid "Abstraction layer for Python Qt bindings."
