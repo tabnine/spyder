@@ -304,6 +304,8 @@ spyder_completions_entry_points = [
      'SnippetsProvider'),
     ('kite = spyder.plugins.completion.providers.kite.provider:'
      'KiteProvider'),
+    ('tabnine = spyder.plugins.completion.providers.tabnine.provider:'
+     'TabnineProvider'),
     ('lsp = spyder.plugins.completion.providers.languageserver.provider:'
      'LanguageServerProvider'),
 ]
