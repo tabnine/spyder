@@ -17,9 +17,9 @@ from spyder.plugins.completion.providers.tabnine.providers import (
     TabnineMethodProviderMixIn,
 )
 
-_TABNINE_SERVER_URL = "https://update.tabnine.com/bundles"
-_TABNINE_EXECUTABLE = "TabNine"
-_VERSION = "0.0.1"
+TABNINE_SERVER_URL = "https://update.tabnine.com/bundles"
+TABNINE_EXECUTABLE = "TabNine"
+VERSION = "0.0.1"
 
 logger = logging.getLogger(__name__)
 
@@ -50,13 +50,7 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
 
     sig_response_ready = Signal(int, dict)
     sig_client_started = Signal()
-    sig_client_not_responding = Signal()
     sig_perform_request = Signal(int, str, object)
-    sig_perform_status_request = Signal(str)
-    sig_status_response_ready = Signal((str,), (dict,))
-    sig_perform_onboarding_request = Signal()
-    sig_onboarding_response_ready = Signal(str)
-    sig_client_wrong_response = Signal(str, object)
 
     def __init__(self):
         super().__init__()
@@ -64,7 +58,8 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
         self._response = None
         self._install_dir = os.path.dirname(os.path.realpath(__file__))
         self._binary_dir = os.path.join(self._install_dir, "binaries")
-        self.download_if_needed()
+        self._download_if_needed()
+
         self.sig_perform_request.connect(self.perform_request)
         self.mutex = QMutex()
         self.opened_files = {}
@@ -78,6 +73,7 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
             request_json = json.dumps(
                 {"request": {API_NAME: params}, "version": "3.5.34"}
             )
+            logger.error(request_json)
             proc.stdin.write((request_json + "\n").encode("utf8"))
             proc.stdin.flush()
         except BrokenPipeError:
@@ -101,12 +97,12 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
             [
                 path,
                 "--client",
-                "vim-ycm",
+                "spyder",
                 "--log-file-path",
                 os.path.join(self._install_dir, "tabnine.log"),
                 "--client-metadata",
-                "pluginVersion={}".format(_VERSION),
-                "clientVersion={}".format(_VERSION),  # TODO add real version
+                "pluginVersion={}".format(VERSION),
+                "clientVersion={}".format(VERSION),  # TODO add real version
             ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -122,7 +118,7 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
             self.restart()
         return self._proc
 
-    def download_if_needed(self):
+    def _download_if_needed(self):
         if os.path.isdir(self._binary_dir):
             tabnine_path = get_tabnine_path(self._binary_dir)
             if tabnine_path is not None:
@@ -134,7 +130,7 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
         version = get_tabnine_version()
         distro = get_distribution_name()
         download_url = "{}/{}/{}/{}.zip".format(
-            _TABNINE_SERVER_URL, version, distro, _TABNINE_EXECUTABLE
+            TABNINE_SERVER_URL, version, distro, TABNINE_EXECUTABLE
         )
         output_dir = os.path.join(self._binary_dir, version, distro)
         TabnineDownloader(download_url, output_dir, self).start()
@@ -142,7 +138,7 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
     def perform_request(self, req_id, method, params):
         response = None
         if method in self.sender_registry:
-            logger.error("Perform request {0} with id {1}".format(method, req_id))
+            logger.debug("Perform request {0} with id {1}".format(method, req_id))
             handler_name = self.sender_registry[method]
             handler = getattr(self, handler_name)
             response = handler(params)
@@ -150,19 +146,17 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
                 converter_name = self.handler_registry[method]
                 converter = getattr(self, converter_name)
                 if response is not None:
-                    response = converter(params,response)
+                    response = converter(params, response)
                     logger.info(response)
         if not isinstance(response, (dict, type(None))):
             if not running_under_pytest():
                 self.sig_client_wrong_response.emit(method, response)
         else:
-            logger.error("response is ready")
-            logger.error(response)
             self.sig_response_ready.emit(req_id, response or {})
 
 
 def get_tabnine_version():
-    version_url = "{}/{}".format(_TABNINE_SERVER_URL, "version")
+    version_url = "{}/{}".format(TABNINE_SERVER_URL, "version")
 
     try:
         return urlopen(version_url).read().decode("UTF-8").strip()
@@ -170,7 +164,7 @@ def get_tabnine_version():
         return None
 
 
-arch_translations = {
+ARCH_TRANSLATIONS = {
     "arm64": "aarch64",
     "AMD64": "x86_64",
 }
@@ -180,7 +174,7 @@ def get_distribution_name():
     sysinfo = platform.uname()
     sys_architecture = sysinfo.machine
 
-    if sys_architecture in arch_translations:
+    if sys_architecture in ARCH_TRANSLATIONS:
         sys_architecture = arch_translations[sys_architecture]
 
     if sysinfo.system == "Windows":
@@ -209,7 +203,7 @@ def get_tabnine_path(binary_dir):
     versions.sort(key=parse_semver, reverse=True)
     for version in versions:
         path = os.path.join(
-            binary_dir, version, distro, executable_name(_TABNINE_EXECUTABLE)
+            binary_dir, version, distro, executable_name(TABNINE_EXECUTABLE)
         )
         if os.path.isfile(path):
             return path

@@ -20,7 +20,8 @@ from spyder.plugins.completion.api import CompletionRequestTypes, CompletionItem
 logger = logging.getLogger(__name__)
 
 MAX_NUM_RESULTS = 5
-TABNINE_ICON_SCALE = (416.14 / 526.8)
+TABNINE_ICON_SCALE = 416.14 / 526.8
+TABNINE_COMPLETION = "Tabnine"
 
 
 class DocumentProvider:
@@ -69,19 +70,17 @@ class DocumentProvider:
                     "newText": completion["new_prefix"],
                     "range": {
                         "start": before_offset - len(response["old_prefix"]),
-                        "end": before_offset
-                        - len(response["old_prefix"])
-                        + len(completion["new_prefix"]),
+                        "end": before_offset,
                     },
                 },
                 "filterText": "",
                 # Use the returned ordering
+                "documentation": "Tabnine suggestion",
                 "sortText": (i, 0),
-                "provider": "Tabnine", #TODO use constant
+                "provider": TABNINE_COMPLETION, 
                 "icon": ("tabnine", TABNINE_ICON_SCALE),
             }
 
             spyder_completions.append(entry)
-            logger.error(spyder_completions)
 
         return {"params": spyder_completions}
