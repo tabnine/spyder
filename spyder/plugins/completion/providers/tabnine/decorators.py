@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Copyright © Spyder Project Contributors
-# Licensed under the terms of the MIT License
-# (see spyder/__init__.py for details)
-
-"""Kite client dispatcher decorators."""
-
 import functools
 
 
@@ -20,7 +12,14 @@ def send_request(req=None, method=None):
         params = req(self, *args, **kwargs)
         if isinstance(params, tuple):
             params, url_params = params
-        response = self.send(method, params, url_params)
+        response = self.request(method, params)
         return response
+
     wrapper._sends = method
+    return wrapper
+
+def handles(method_name):
+    def wrapper(func):
+        func._handle = method_name
+        return func
     return wrapper

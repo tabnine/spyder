@@ -11,4 +11,3 @@ from .document import DocumentProvider
 
 class TabnineMethodProviderMixIn(DocumentProvider):
     pass
-

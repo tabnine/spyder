@@ -619,6 +619,7 @@ class CompletionItemKind:
     COLOR = 16
     FILE = 17
     REFERENCE = 18
+    TABNINE = 19
 
 
 class InsertTextFormat:
