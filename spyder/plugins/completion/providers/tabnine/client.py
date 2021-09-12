@@ -73,7 +73,6 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
             request_json = json.dumps(
                 {"request": {API_NAME: params}, "version": "3.5.34"}
             )
-            logger.error(request_json)
             proc.stdin.write((request_json + "\n").encode("utf8"))
             proc.stdin.flush()
         except BrokenPipeError:
@@ -109,7 +108,6 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
             stderr=subprocess.DEVNULL,
         )
         self.sig_client_started.emit()
-        print("started emitted")
 
     def _get_running_tabnine(self):
         if self._proc is None:
@@ -147,7 +145,6 @@ class TabnineClient(QObject, TabnineMethodProviderMixIn):
                 converter = getattr(self, converter_name)
                 if response is not None:
                     response = converter(params, response)
-                    logger.info(response)
         if not isinstance(response, (dict, type(None))):
             if not running_under_pytest():
                 self.sig_client_wrong_response.emit(method, response)

@@ -77,7 +77,7 @@ class DocumentProvider:
                 # Use the returned ordering
                 "documentation": "Tabnine suggestion",
                 "sortText": (i, 0),
-                "provider": TABNINE_COMPLETION, 
+                "provider": TABNINE_COMPLETION,
                 "icon": ("tabnine", TABNINE_ICON_SCALE),
             }
 
