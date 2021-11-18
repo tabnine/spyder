@@ -200,6 +200,11 @@ kite = pkg_resources.EntryPoint.parse(
     'KiteProvider'
 )
 
+tabnine = pkg_resources.EntryPoint.parse(
+    'tabnine = spyder.plugins.completion.providers.tabnine.provider:'
+    'TabnineProvider'
+)
+
 # Create a fake Spyder distribution
 d = pkg_resources.Distribution(__file__)
 
@@ -209,7 +214,8 @@ d._ep_map = {
         'fallback': fallback,
         'snippets': snippets,
         'lsp': lsp,
-        'kite': kite
+        'kite': kite,
+        'tabnine': tabnine,
     }
 }
 

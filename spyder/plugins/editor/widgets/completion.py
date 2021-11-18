@@ -48,6 +48,7 @@ class CompletionWidget(QListWidget):
         CompletionItemKind.COLOR: 'color',
         CompletionItemKind.FILE: 'file',
         CompletionItemKind.REFERENCE: 'reference',
+        CompletionItemKind.TABNINE: 'tabnine',
     }
     ICON_MAP = {}
 
